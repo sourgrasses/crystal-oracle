@@ -272,6 +272,9 @@ lib ODPI
 
   fun dpi_context_destroy = dpiContext_destroy(context : DpiContext*) : Int32
 
+  fun dpi_context_get_error = dpiContext_getError(context : DpiContext*,
+                                                  errorInfo : DpiErrorInfo*) : Void
+
   fun dpi_conn_prepare_stmt = dpiConn_prepareStmt(conn : DpiConn*,
                                                   scrollable : Int32,
                                                   sql : UInt8*,

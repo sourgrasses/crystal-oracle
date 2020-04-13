@@ -20,10 +20,10 @@ module Oracle
 
       user = context.uri.user.not_nil!.to_slice()
       user_len = user.size
-      user = pointerof(user).as(Pointer(ODPI::UserName))
+      user = user.to_unsafe.as(Pointer(ODPI::UserName))
 
       password = context.uri.password.not_nil!.to_slice
-      conn_string = context.uri.host.not_nil!.to_slice
+      conn_string = "#{context.uri.host}:#{context.uri.port}#{context.uri.path}".to_slice
 
       common_params = Pointer(ODPI::DpiCommonCreateParams).null
       create_params = Pointer(ODPI::DpiConnCreateParams).null
@@ -33,8 +33,9 @@ module Oracle
                                  common_params, create_params, pointerof(@raw_conn))
 
       if res != 0
-        puts res
-        raise "Error establishing connection"
+        ODPI.dpi_context_get_error(@raw_context, pointerof(error))
+        error_msg = String.new(error.message)
+        raise "Error establishing connection: #{error_msg}"
       end
     end
 
