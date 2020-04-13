@@ -1,0 +1,14 @@
+name: oracle
+version: 0.1.0
+
+authors:
+  - Jenn Wheeler <jwheelerac@gmail.com>
+
+dependencies:
+    db:
+        github: crystal-lang/crystal-db
+        version: ~> 0.9.0
+
+crystal: 0.34.0
+
+license: MIT
