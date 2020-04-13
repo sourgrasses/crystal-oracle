@@ -21,6 +21,7 @@ module Oracle
     end
 
     def move_next : Bool
+      false
     end
   end
 end

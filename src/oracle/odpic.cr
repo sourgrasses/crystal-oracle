@@ -4,7 +4,6 @@ lib ODPI
   type DpiCommonCreateParams = Void
   type DpiConn = Void
   type DpiContext = Void
-  type DpiErrorInfo = Void
   type DpiStmt = Void
   type UserName = UInt8*
 
@@ -236,6 +235,18 @@ lib ODPI
     Immediate   = 1
   end
 
+  struct DpiErrorInfo
+    code : Int32
+    offset : UInt16
+    message : UInt8*
+    messageLength : UInt32
+    encoding : UInt8*
+    fnName : UInt8*
+    action : UInt8*
+    sqlState : UInt8*
+    isRecoverable : Int32
+  end
+
   fun dpi_conn_create = dpiConn_create(context : DpiContext*,
                                        user_name : UserName*,
                                        user_name_length : UInt32,
@@ -247,11 +258,6 @@ lib ODPI
                                        createParams : DpiConnCreateParams*,
                                        conn : DpiConn**) : Int32
 
-  fun dpi_context_create = dpiContext_create(majorVersion : UInt32,
-                                             minorVersion : UInt32,
-                                             context : DpiContext**,
-                                             errorInfo : DpiErrorInfo*) : Int32
-
   fun dpi_conn_release = dpiConn_release(conn : DpiConn*) : Int32
 
   fun dpi_conn_close = dpiConn_close(conn : DpiConn*,
@@ -259,13 +265,38 @@ lib ODPI
                                      tag : UInt8*,
                                      tag_length : UInt32) : Int32
 
+  fun dpi_context_create = dpiContext_create(majorVersion : UInt32,
+                                             minorVersion : UInt32,
+                                             context : DpiContext**,
+                                             errorInfo : DpiErrorInfo*) : Int32
+
+  fun dpi_context_destroy = dpiContext_destroy(context : DpiContext*) : Int32
+
   fun dpi_conn_prepare_stmt = dpiConn_prepareStmt(conn : DpiConn*,
                                                   scrollable : Int32,
                                                   sql : UInt8*,
                                                   sqlLength : UInt32,
                                                   tag : UInt8*,
                                                   tagLength : UInt32,
-                                                  stmt : DpiStmt**)
+                                                  stmt : DpiStmt**) : Int32
+
+  fun dpi_stmt_execute = dpiStmt_execute(stmt : DpiStmt*,
+                                         mode : DpiExecMode,
+                                         numQueryColumns : UInt32*) : Int32
+
+  fun dpi_stmt_execute_many = dpiStmt_executeMany(stmt : DpiStmt*,
+                                                  mode : DpiExecMode,
+                                                  numIters : UInt32)
+
+  fun dpi_stmt_fetch = dpiStmt_fetch(stmt : DpiStmt*,
+                                     found : Int32*,
+                                     bufferRowIndex : UInt32*) : Int32
+
+  fun dpi_stmt_fetch_rows = dpiStmt_fetchRows(stmt : DpiStmt*,
+                                              maxRows : UInt32,
+                                              bufferRowIndex : UInt32*,
+                                              numRowsFetched : UInt32*,
+                                              moreRows : Int32) : Int32
 
   fun dpi_stmt_release = dpiStmt_release(stmt : DpiStmt*)
 end
