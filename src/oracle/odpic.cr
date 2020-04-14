@@ -299,7 +299,7 @@ lib ODPI
                                               maxRows : UInt32,
                                               bufferRowIndex : UInt32*,
                                               numRowsFetched : UInt32*,
-                                              moreRows : Int32) : Int32
+                                              moreRows : Int32*) : Int32
 
   fun dpi_stmt_release = dpiStmt_release(stmt : DpiStmt*)
 end

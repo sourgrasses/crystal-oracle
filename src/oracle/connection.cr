@@ -3,7 +3,7 @@ module Oracle
     @raw_conn : ODPI::DpiConn*
     @raw_context : ODPI::DpiContext*
     @details : String?
-    getter raw_conn
+    getter raw_conn, raw_context
 
     def initialize(context : DB::ConnectionContext)
       super(context)
@@ -23,7 +23,12 @@ module Oracle
       user = user.to_unsafe.as(Pointer(ODPI::UserName))
 
       password = context.uri.password.not_nil!.to_slice
-      conn_string = "#{context.uri.host}:#{context.uri.port}#{context.uri.path}".to_slice
+      conn_string =
+        if context.uri.port != nil
+          "#{context.uri.host}:#{context.uri.port}#{context.uri.path}".to_slice
+        else
+          "#{context.uri.host}#{context.uri.path}".to_slice
+        end
 
       common_params = Pointer(ODPI::DpiCommonCreateParams).null
       create_params = Pointer(ODPI::DpiConnCreateParams).null
