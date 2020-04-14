@@ -4,7 +4,9 @@ lib ODPI
   type DpiCommonCreateParams = Void
   type DpiConn = Void
   type DpiContext = Void
+  type DpiEnv = Void
   type DpiStmt = Void
+  type DpiTypeFreeProc = Void*
   type UserName = UInt8*
 
   enum DpiAuthMode : UInt32
@@ -235,6 +237,55 @@ lib ODPI
     Immediate   = 1
   end
 
+  struct DpiBytes
+    ptr : UInt8*
+    length : UInt32
+    encoding : UInt8*
+  end
+
+  struct DpiIntervalDs
+    days : Int32
+    hours : Int32
+    minutes : Int32
+    seconds : Int32
+    fseconds : Int32
+  end
+
+  struct DpiIntervalYm
+    years : Int32
+    months : Int32
+  end
+
+  struct DpiTimestamp
+    year : Int16
+    month : UInt8
+    day : UInt8
+    hour : UInt8
+    minute : UInt8
+    second : UInt8
+    fsecond : UInt32
+    tzHourOffset : Int8
+    tzMinuteOffset : Int8
+  end
+
+  struct DpiData
+    isNull : Int32
+    value : DpiDataBuffer
+  end
+
+  struct DpiLob
+    typeDef : DpiTypeDef*
+    checkInt : UInt32
+    refCount : UInt32
+    env : DpiEnv*
+    conn : DpiConn*
+    openSlotNum : UInt32
+    type : DpiOracleType*
+    locator : Void*
+    buffer : UInt8*
+    closing : Int32
+  end
+
   struct DpiErrorInfo
     code : Int32
     offset : UInt16
@@ -245,6 +296,94 @@ lib ODPI
     action : UInt8*
     sqlState : UInt8*
     isRecoverable : Int32
+  end
+
+  union DpiDataBuffer
+    asBoolean : Int32
+    asInt64 : Int64
+    asUint64 : UInt64
+    asFloat : Float32
+    asDouble : Float64
+    asBytes : DpiBytes
+    asTimestamp : DpiTimestamp
+    asIntervalDS : DpiIntervalDs
+    asIntervalYM : DpiIntervalYm
+    asLOB : DpiLob*
+    asObject : DpiObject*
+    asStmt : DpiStmt*
+    asRowid : DpiRowid*
+  end
+
+  struct DpiOracleType
+    oracleTypeNum : DpiOracleTypeNum
+    defaultNativeTypeNum : DpiNativeTypeNum
+    oracleType : UInt16
+    charsetForm : UInt8
+    sizeInBytes : UInt32
+    isCharacterData : Int32
+    canBeInArray : Int32
+    requiresPreFetch : Int32
+  end
+
+  struct DpiObjectType
+    typeDef : DpiTypeDef*
+    checkInt : UInt32
+    refCount : UInt32
+    env : DpiEnv*
+    conn : DpiConn*
+    tdo : Void*
+    typeCode : UInt16
+    schema : UInt8*
+    schemaLength : UInt32
+    name : UInt8*
+    nameLength : UInt32
+    elementTypeInfo : DpiDataTypeInfo
+    isCollection : Int32
+    numAttributes : UInt16
+  end
+
+  struct DpiDataTypeInfo
+    oracleTypeNum : DpiOracleTypeNum
+    defaultNativeTypeNum : DpiNativeTypeNum
+    ociTypeCode : UInt16
+    dbSizeInBytes : UInt32
+    clientSizeInBytes : UInt32
+    sizeInChars : UInt32
+    precision : Int16
+    scale : Int8
+    fsPrecision : UInt8
+    objectType : DpiObjectType*
+  end
+
+  struct DpiObject
+    typeDef : DpiTypeDef*
+    checkInt : UInt32
+    refCount : UInt32
+    env : DpiEnv*
+    type : DpiObjectType*
+    openSlotNum : UInt32
+    instance : Void*
+    indicator : Void*
+    dependsOnObj : DpiObject*
+    freeIndicator : Int32
+    closing : Int32
+  end
+
+  struct DpiRowid
+    typeDef : DpiTypeDef*
+    checkInt : UInt32
+    refCount : UInt32
+    env : DpiEnv*
+    handle : Void*
+    buffer : UInt8*
+    bufferLengt : UInt16
+  end
+
+  struct DpiTypeDef
+    name : UInt8*
+    size : LibC::SizeT
+    checkInt : UInt32
+    freeProc : DpiTypeFreeProc
   end
 
   fun dpi_conn_create = dpiConn_create(context : DpiContext*,
@@ -300,6 +439,14 @@ lib ODPI
                                               bufferRowIndex : UInt32*,
                                               numRowsFetched : UInt32*,
                                               moreRows : Int32*) : Int32
+
+  fun dpi_stmt_get_row_count = dpiStmt_getRowCount(stmt: DpiStmt*,
+                                                   count: UInt64*) : Int32
+
+  fun dpi_stmt_get_query_value = dpiStmt_getQueryValue(stmt : DpiStmt*,
+                                                       pos : UInt32,
+                                                       nativeTypeNum : DpiNativeTypeNum*,
+                                                       data : DpiData**)
 
   fun dpi_stmt_release = dpiStmt_release(stmt : DpiStmt*)
 end
