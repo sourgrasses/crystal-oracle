@@ -446,7 +446,7 @@ lib ODPI
   fun dpi_stmt_get_query_value = dpiStmt_getQueryValue(stmt : DpiStmt*,
                                                        pos : UInt32,
                                                        nativeTypeNum : DpiNativeTypeNum*,
-                                                       data : DpiData**)
+                                                       data : DpiData**) : Int32
 
   fun dpi_stmt_release = dpiStmt_release(stmt : DpiStmt*)
 end
