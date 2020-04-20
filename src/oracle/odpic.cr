@@ -386,6 +386,13 @@ lib ODPI
     freeProc : DpiTypeFreeProc
   end
 
+  struct DpiQueryInfo
+    name : UInt8*
+    nameLength : UInt32
+    typeInfo : DpiDataTypeInfo
+    nullOk : Int32
+  end
+
   fun dpi_conn_create = dpiConn_create(context : DpiContext*,
                                        user_name : UserName*,
                                        user_name_length : UInt32,
@@ -440,13 +447,17 @@ lib ODPI
                                               numRowsFetched : UInt32*,
                                               moreRows : Int32*) : Int32
 
-  fun dpi_stmt_get_row_count = dpiStmt_getRowCount(stmt: DpiStmt*,
-                                                   count: UInt64*) : Int32
+  fun dpi_stmt_get_query_info = dpiStmt_getQueryInfo(stmt : DpiStmt*,
+                                                     pos : UInt32,
+                                                     info :  DpiQueryInfo*)
 
   fun dpi_stmt_get_query_value = dpiStmt_getQueryValue(stmt : DpiStmt*,
                                                        pos : UInt32,
                                                        nativeTypeNum : DpiNativeTypeNum*,
                                                        data : DpiData**) : Int32
+
+  fun dpi_stmt_get_row_count = dpiStmt_getRowCount(stmt: DpiStmt*,
+                                                   count: UInt64*) : Int32
 
   fun dpi_stmt_release = dpiStmt_release(stmt : DpiStmt*)
 end
