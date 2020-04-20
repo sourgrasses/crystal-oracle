@@ -449,7 +449,7 @@ lib ODPI
 
   fun dpi_stmt_get_query_info = dpiStmt_getQueryInfo(stmt : DpiStmt*,
                                                      pos : UInt32,
-                                                     info :  DpiQueryInfo*)
+                                                     info :  DpiQueryInfo*) : Int32
 
   fun dpi_stmt_get_query_value = dpiStmt_getQueryValue(stmt : DpiStmt*,
                                                        pos : UInt32,
