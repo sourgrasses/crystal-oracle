@@ -24,7 +24,7 @@ module Oracle
   class ResultSet < DB::ResultSet
     @col_index : UInt32
     @col_names : Array(String)
-    @data_buffer : Pointer(ODPI::DpiData)
+    @data_buffer : ODPI::DpiData*
     @error_info : ODPI::DpiErrorInfo
     @num_cols : UInt32
     @raw_context : ODPI::DpiContext*
@@ -71,7 +71,8 @@ module Oracle
         raise "Error fetching column #{@col_index}: #{error_msg}"
       end
 
-      Field.new("", @data_buffer, typenum)
+      name = @col_names[@col_index - 1]
+      Field.new(name, @data_buffer, typenum)
     end
 
     def column_count : Int32
@@ -92,78 +93,79 @@ module Oracle
       if found != 1
         false
       else
+        @col_index = 1
         true
       end
     end
 
     def read
-      value = fetch_next_field
+      field = fetch_next_field
       @col_index += 1
-      value
+      field.value
     end
 
     def read(t : Int32.class) : Int32
-      self.read(String).to_i32
+      # TODO
     end
 
     def read(t : Int32?.class) : Int32?
-      read(String).to_i32?
+      # TODO
     end
 
     def read(t : Int64.class) : Int64
-      self.read(String).to_i64
+      # TODO
     end
 
     def read(t : Int64?.class) : Int64?
-      read(String).to_i64?
+      # TODO
     end
 
     def read(t : UInt32.class) : UInt32
-      self.read(String).to_u32
+      # TODO
     end
 
     def read(t : UInt32?.class) : UInt32?
-      read(String).to_u32?
+      # TODO
     end
 
     def read(t : UInt64.class) : UInt64
-      self.read(String).to_u64
+      # TODO
     end
 
     def read(t : UInt64?.class) : UInt64?
-      read(String).to_u64?
+      # TODO
     end
 
     def read(t : Float32.class) : Float32
-      self.read(String).to_f32
+      # TODO
     end
 
     def read(t : Float32?.class) : Float32?
-      read(String).to_f32?
+      # TODO
     end
 
     def read(t : Float64.class) : Float64
-      self.read(String).to_f64
+      # TODO
     end
 
     def read(type : Float64?.class) : Float64?
-      read(String).to_f64?
+      # TODO
     end
 
     def read(t : Bool.class) : Bool
-      self.read(String) == "1"
+      # TODO
     end
 
     def read(t : Time.class, pattern : String = "%Y-%m-%d %H:%M:%S.%N") : Time
-      Time.parse_local(self.read(String), pattern)
+      # TODO
     end
 
     def read(t : String.class) : String
-      String.new(self.read)
+      # TODO
     end
 
     def read(type : String?.class) : String?
-      self.read.try &.to_s
+      # TODO
     end
 
     protected def do_close
