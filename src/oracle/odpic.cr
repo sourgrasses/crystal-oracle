@@ -1,5 +1,10 @@
 @[Link("odpic")]
 lib ODPI
+  DPI_MAX_ERROR_SIZE = 3072
+  DPI_OCI_NLS_MAXBUFSZ = 100
+
+  alias DpiOciNumber = UInt8
+
   type DpiConnCreateParams = Void
   type DpiCommonCreateParams = Void
   type DpiConn = Void
@@ -237,6 +242,126 @@ lib ODPI
     Immediate   = 1
   end
 
+  enum DpiErrorNum
+    DPI_ERR_NO_ERR = 1000
+    DPI_ERR_NO_MEMORY
+    DPI_ERR_INVALID_HANDLE
+    DPI_ERR_ERR_NOT_INITIALIZED
+    DPI_ERR_GET_FAILED
+    DPI_ERR_CREATE_ENV
+    DPI_ERR_CONVERT_TEXT
+    DPI_ERR_QUERY_NOT_EXECUTED
+    DPI_ERR_UNHANDLED_DATA_TYPE
+    DPI_ERR_INVALID_ARRAY_POSITION
+    DPI_ERR_NOT_CONNECTED
+    DPI_ERR_CONN_NOT_IN_POOL
+    DPI_ERR_INVALID_PROXY
+    DPI_ERR_NOT_SUPPORTED
+    DPI_ERR_UNHANDLED_CONVERSION
+    DPI_ERR_ARRAY_SIZE_TOO_BIG
+    DPI_ERR_INVALID_DATE
+    DPI_ERR_VALUE_IS_NULL
+    DPI_ERR_ARRAY_SIZE_TOO_SMALL
+    DPI_ERR_BUFFER_SIZE_TOO_SMALL
+    DPI_ERR_VERSION_NOT_SUPPORTED
+    DPI_ERR_INVALID_ORACLE_TYPE
+    DPI_ERR_WRONG_ATTR
+    DPI_ERR_NOT_COLLECTION
+    DPI_ERR_INVALID_INDEX
+    DPI_ERR_NO_OBJECT_TYPE
+    DPI_ERR_INVALID_CHARSET
+    DPI_ERR_SCROLL_OUT_OF_RS
+    DPI_ERR_QUERY_POSITION_INVALID
+    DPI_ERR_NO_ROW_FETCHED
+    DPI_ERR_TLS_ERROR
+    DPI_ERR_ARRAY_SIZE_ZERO
+    DPI_ERR_EXT_AUTH_WITH_CREDENTIALS
+    DPI_ERR_CANNOT_GET_ROW_OFFSET
+    DPI_ERR_CONN_IS_EXTERNAL
+    DPI_ERR_TRANS_ID_TOO_LARGE
+    DPI_ERR_BRANCH_ID_TOO_LARGE
+    DPI_ERR_COLUMN_FETCH
+    DPI_ERR_STMT_CLOSED
+    DPI_ERR_LOB_CLOSED
+    DPI_ERR_INVALID_CHARSET_ID
+    DPI_ERR_INVALID_OCI_NUMBER
+    DPI_ERR_INVALID_NUMBER
+    DPI_ERR_NUMBER_NO_REPR
+    DPI_ERR_NUMBER_STRING_TOO_LONG
+    DPI_ERR_NULL_POINTER_PARAMETER
+    DPI_ERR_LOAD_LIBRARY
+    DPI_ERR_LOAD_SYMBOL
+    DPI_ERR_ORACLE_CLIENT_TOO_OLD
+    DPI_ERR_NLS_ENV_VAR_GET
+    DPI_ERR_PTR_LENGTH_MISMATCH
+    DPI_ERR_NAN
+    DPI_ERR_WRONG_TYPE
+    DPI_ERR_BUFFER_SIZE_TOO_LARGE
+    DPI_ERR_NO_EDITION_WITH_CONN_CLASS
+    DPI_ERR_NO_BIND_VARS_IN_DDL
+    DPI_ERR_SUBSCR_CLOSED
+    DPI_ERR_NO_EDITION_WITH_NEW_PASSWORD
+    DPI_ERR_UNEXPECTED_OCI_RETURN_VALUE
+    DPI_ERR_EXEC_MODE_ONLY_FOR_DML
+    DPI_ERR_ARRAY_VAR_NOT_SUPPORTED
+    DPI_ERR_EVENTS_MODE_REQUIRED
+    DPI_ERR_ORACLE_DB_TOO_OLD
+    DPI_ERR_CALL_TIMEOUT
+    DPI_ERR_SODA_CURSOR_CLOSED
+    DPI_ERR_EXT_AUTH_INVALID_PROXY
+    DPI_ERR_QUEUE_NO_PAYLOAD
+    DPI_ERR_QUEUE_WRONG_PAYLOAD_TYPE
+    DPI_ERR_ORACLE_CLIENT_UNSUPPORTED
+    DPI_ERR_MISSING_SHARDING_KEY
+    DPI_ERR_MAX
+  end
+
+  union DpiDataBuffer
+    asBoolean : Int32
+    asInt64 : Int64
+    asUint64 : UInt64
+    asFloat : Float32
+    asDouble : Float64
+    asBytes : DpiBytes
+    asTimestamp : DpiTimestamp
+    asIntervalDs : DpiIntervalDs
+    asIntervalYm : DpiIntervalYm
+    asLOB : DpiLob*
+    asObject : DpiObject*
+    asStmt : DpiStmt*
+    asRowid : DpiRowid*
+  end
+
+  union DpiReferenceBuffer
+    asHandle : Void*
+    asObject : DpiObject*
+    asStmt : DpiStmt*
+    asLOB : DpiLob*
+    asRowid : DpiRowid*
+  end
+
+  union DpiOracleData
+    asRaw : Void*
+    asBytes : UInt8*
+    asFloat : Float32*
+    asDouble : Float64*
+    asInt32 : Int32*
+    asInt64 : Int64*
+    asUint64 : UInt64*
+    asNumber : DpiOciNumber*
+    asDate : DpiOciDate*
+    asTimestamp : Void**
+    asInterval : Void**
+    asLobLocator : Void**
+    asString : Void**
+    asRawData : Void**
+    asStmt : Void**
+    asRowid : Void**
+    asBoolean : Int32*
+    asObject : Void**
+    asCollection : Void**
+  end
+
   struct DpiBytes
     ptr : UInt8*
     length : UInt32
@@ -296,22 +421,6 @@ lib ODPI
     action : UInt8*
     sqlState : UInt8*
     isRecoverable : Int32
-  end
-
-  union DpiDataBuffer
-    asBoolean : Int32
-    asInt64 : Int64
-    asUint64 : UInt64
-    asFloat : Float32
-    asDouble : Float64
-    asBytes : DpiBytes
-    asTimestamp : DpiTimestamp
-    asIntervalDS : DpiIntervalDs
-    asIntervalYM : DpiIntervalYm
-    asLOB : DpiLob*
-    asObject : DpiObject*
-    asStmt : DpiStmt*
-    asRowid : DpiRowid*
   end
 
   struct DpiOracleType
@@ -393,6 +502,79 @@ lib ODPI
     nullOk : Int32
   end
 
+  struct DpiVar
+    typeDef : DpiTypeDef*
+    checkInt : UInt32
+    refCount : UInt32
+    env : DpiEnv*
+    conn : DpiConn*
+    type : DpiOracleType*
+    nativeTypeNum : DpiNativeTypeNum
+    requiresPreFetch : Int32
+    isArray : Int32
+    sizeInBytes : UInt32
+    isDynamic : Int32
+    objectType : DpiObjectType*
+    buffer : DpiVarBuffer
+    dynBindBuffers : DpiVarBuffer*
+    error : DpiError*
+  end
+
+  struct DpiVarBuffer
+    maxArraySize : UInt32
+    actualArraySize : UInt32
+    indicator : Int16*
+    returnCode : UInt16*
+    actualLength16 : UInt16*
+    actualLength32 : UInt32*
+    objectIndicator : Void**
+    references : DpiReferenceBuffer*
+    dynamicBytes : DpiDynamicBytes*
+    tempBuffer : UInt8*
+    externalData : DpiData*
+    data : DpiOracleData
+  end
+
+  struct DpiError
+    buffer : DpiErrorBuffer*
+    handle : Void*
+    env : DpiEnv*
+  end
+
+  struct DpiErrorBuffer
+    code : Int32
+    offset : UInt32
+    errorNum : DpiErrorNum
+    fnName : UInt8*
+    action : UInt8*
+    encoding : StaticArray(UInt8, DPI_OCI_NLS_MAXBUFSZ)
+    message : StaticArray(UInt8, DPI_MAX_ERROR_SIZE)
+    messageLength : UInt32
+    isRecoverable : Int32
+    isWarning : Int32
+  end
+
+  struct DpiDynamicBytesChunk
+    ptr : UInt8*
+    length : UInt32
+    allocatedLength : UInt32
+  end
+
+  struct DpiDynamicBytes
+    numChunks : UInt32
+    allocatedChunks : UInt32
+    chunks : DpiDynamicBytesChunk*
+  end
+
+  struct DpiOciDate
+    year : Int16
+    month : UInt8
+    day : UInt8
+    hour : UInt8
+    minute : UInt8
+    second : UInt8
+  end
+
   fun dpi_conn_create = dpiConn_create(context : DpiContext*,
                                        user_name : UserName*,
                                        user_name_length : UInt32,
@@ -428,6 +610,15 @@ lib ODPI
                                                   tag : UInt8*,
                                                   tagLength : UInt32,
                                                   stmt : DpiStmt**) : Int32
+
+  fun dpi_stmt_bind_by_name = dpiStmt_bindByName(stmt : DpiStmt*,
+                                                 name : UInt8*,
+                                                 nameLength : UInt32,
+                                                 var : DpiVar*) : Int32
+
+  fun dpi_stmt_bind_by_pos = dpiStmt_bindByPos(stmt : DpiStmt*,
+                                               pos : UInt32,
+                                               var : DpiVar*) : Int32
 
   fun dpi_stmt_execute = dpiStmt_execute(stmt : DpiStmt*,
                                          mode : DpiExecMode,
