@@ -1,5 +1,8 @@
 @[Link("odpic")]
 lib ODPI
+  DPI_SUCCESS = 0
+  DPI_FAILURE = -1
+
   DPI_MAX_ERROR_SIZE = 3072
   DPI_OCI_NLS_MAXBUFSZ = 100
 
@@ -602,6 +605,17 @@ lib ODPI
 
   fun dpi_context_get_error = dpiContext_getError(context : DpiContext*,
                                                   errorInfo : DpiErrorInfo*) : Void
+
+  fun dpi_conn_new_var = dpiConn_newVar(conn : DpiConn*,
+                                        oracleTypeNum : DpiOracleTypeNum,
+                                        nativeTypeNum : DpiNativeTypeNum,
+                                        maxArraySize : UInt32,
+                                        size : UInt32,
+                                        sizeIsBytes : Int32,
+                                        isArray : Int32,
+                                        objType : DpiObjectType*,
+                                        var : DpiVar**,
+                                        data : DpiData**) : Int32
 
   fun dpi_conn_prepare_stmt = dpiConn_prepareStmt(conn : DpiConn*,
                                                   scrollable : Int32,

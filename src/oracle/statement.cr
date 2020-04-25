@@ -26,6 +26,11 @@ module Oracle
         raise "Error preparing statement"
       end
 
+      if args.size != 0
+        binder= Binder.new
+        binder.bind_args(self.raw_conn(), @raw_stmt, args)
+      end
+
       res = ODPI.dpi_stmt_execute(@raw_stmt , ODPI::DpiExecMode::Default, out num_cols)
 
       if res != 0
