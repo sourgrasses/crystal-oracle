@@ -22,7 +22,7 @@ module Oracle
                                        Pointer(UInt8).null, 0,
                                        out @raw_stmt)
 
-      if res != 0
+      if res != ODPI::DPI_SUCCESS
         raise "Error preparing statement"
       end
 
@@ -33,7 +33,7 @@ module Oracle
 
       res = ODPI.dpi_stmt_execute(@raw_stmt , ODPI::DpiExecMode::Default, out num_cols)
 
-      if res != 0
+      if res != ODPI::DPI_SUCCESS
         raise "Error executing statement"
       end
 

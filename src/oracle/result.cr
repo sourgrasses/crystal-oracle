@@ -42,7 +42,8 @@ module Oracle
       @raw_stmt = statement.raw_stmt
       @error_info = ODPI::DpiErrorInfo.new
 
-      if ODPI.dpi_stmt_get_row_count(@raw_stmt, out @rows_affected) != 0
+      res = ODPI.dpi_stmt_get_row_count(@raw_stmt, out @rows_affected)
+      if res != ODPI::DPI_SUCCESS
         ODPI.dpi_context_get_error(@raw_context, pointerof(@error_info))
         error_msg = String.new(@error_info.message)
         raise "Error fetching number of rows affected: #{error_msg}"
@@ -50,7 +51,8 @@ module Oracle
 
       query_info = ODPI::DpiQueryInfo.new
       (1..@num_cols).each do |i|
-        if ODPI.dpi_stmt_get_query_info(@raw_stmt, i, pointerof(query_info)) != 0
+        res = ODPI.dpi_stmt_get_query_info(@raw_stmt, i, pointerof(query_info))
+        if res != ODPI::DPI_SUCCESS
           ODPI.dpi_context_get_error(@raw_context, pointerof(@error_info))
           error_msg = String.new(@error_info.message)
           raise "Error fetching column names: #{error_msg}"
@@ -65,7 +67,7 @@ module Oracle
       res = ODPI.dpi_stmt_get_query_value(@raw_stmt, @col_index, out typenum,
                                           pointerof(@data_buffer))
 
-      if res != 0
+      if res != ODPI::DPI_SUCCESS
         ODPI.dpi_context_get_error(@raw_context, pointerof(@error_info))
         error_msg = String.new(@error_info.message)
         raise "Error fetching column #{@col_index}: #{error_msg}"

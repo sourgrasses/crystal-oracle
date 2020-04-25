@@ -14,7 +14,7 @@ module Oracle
 
       res = ODPI.dpi_context_create(3, 3, pointerof(@raw_context), pointerof(error))
 
-      if res != 0
+      if res != ODPI::DPI_SUCCESS
         puts String.new(error.message)
       end
 
@@ -37,7 +37,7 @@ module Oracle
                                  password.size, conn_string, conn_string.size,
                                  common_params, create_params, pointerof(@raw_conn))
 
-      if res != 0
+      if res != ODPI::DPI_SUCCESS
         ODPI.dpi_context_get_error(@raw_context, pointerof(error))
         error_msg = String.new(error.message)
         raise "Error establishing connection: #{error_msg}"
