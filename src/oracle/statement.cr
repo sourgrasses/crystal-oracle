@@ -28,13 +28,16 @@ module Oracle
 
       if args.size != 0
         binder= Binder.new
-        binder.bind_args(self.raw_conn(), @raw_stmt, args)
+        binder.bind_args(self, args)
       end
 
       res = ODPI.dpi_stmt_execute(@raw_stmt , ODPI::DpiExecMode::Default, out num_cols)
 
       if res != ODPI::DPI_SUCCESS
-        raise "Error executing statement"
+        error_info = ODPI::DpiErrorInfo.new
+        ODPI.dpi_context_get_error(connection.raw_context, pointerof(error_info))
+        error_msg = String.new(error_info.message)
+        raise "Error executing statement #{error_msg}"
       end
 
       ResultSet.new(self, num_cols)
