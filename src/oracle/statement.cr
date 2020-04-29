@@ -27,7 +27,7 @@ module Oracle
       end
 
       if args.size != 0
-        binder= Binder.new
+        binder = Binder.new
         binder.bind_args(self, args)
       end
 
