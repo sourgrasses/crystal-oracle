@@ -27,10 +27,9 @@ DB.open "oracle://user:password@host:port/SID" do |db|
   db.exec "create table goodfriends (name varchar(30), age int)"
   db.exec "insert into goodfriends values (:1, :2)", "Ben Buddy", 28
 
-  args = [] of DB::Any
-  args << "Sarah Bear"
-  args << 33
-  db.exec "insert into contacts values (:1, :2)", args
+  arg1 = "Sarah Bear"
+  arg2 = 33
+  db.exec "insert into contacts values (:1, :2)", arg1, arg2
 
   puts "max age:"
   puts db.scalar "select max(age) from contacts" # => 33
