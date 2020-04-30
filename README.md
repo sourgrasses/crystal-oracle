@@ -2,7 +2,10 @@
 
 Crystal driver for Oracle Databse
 
-This is essentially a wrapper around [ODPI](https://github.com/oracle/odpi) similar to [cx_Oracle](https://github.com/oracle/python-cx_Oracle) for Python and [godror](https://github.com/godror/godror) for Go.
+This is essentially a wrapper around [ODPI](https://github.com/oracle/odpi)
+similar to [cx_Oracle](https://github.com/oracle/python-cx_Oracle) for Python,
+the [oracle crate](https://github.com/kubo/rust-oracle) for Rust, and
+[godror](https://github.com/godror/godror) for Go.
 
 ## Installation
 
