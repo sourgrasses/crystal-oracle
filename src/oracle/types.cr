@@ -74,5 +74,15 @@ module Oracle
     def as_native_type_num(t : String.class)
       ODPI::DpiNativeTypeNum::Bytes
     end
+
+    def string_as_dpi_bytes(s : String) : ODPI::DpiBytes
+      s.check_no_null_byte
+
+      bytes = ODPI::DpiBytes.new
+      bytes.ptr = s.to_unsafe
+      bytes.length = s.size
+
+      bytes
+    end
   end
 end

@@ -505,39 +505,6 @@ lib ODPI
     nullOk : Int32
   end
 
-  struct DpiVar
-    typeDef : DpiTypeDef*
-    checkInt : UInt32
-    refCount : UInt32
-    env : DpiEnv*
-    conn : DpiConn*
-    type : DpiOracleType*
-    nativeTypeNum : DpiNativeTypeNum
-    requiresPreFetch : Int32
-    isArray : Int32
-    sizeInBytes : UInt32
-    isDynamic : Int32
-    objectType : DpiObjectType*
-    buffer : DpiVarBuffer
-    dynBindBuffers : DpiVarBuffer*
-    error : DpiError*
-  end
-
-  struct DpiVarBuffer
-    maxArraySize : UInt32
-    actualArraySize : UInt32
-    indicator : Int16*
-    returnCode : UInt16*
-    actualLength16 : UInt16*
-    actualLength32 : UInt32*
-    objectIndicator : Void**
-    references : DpiReferenceBuffer*
-    dynamicBytes : DpiDynamicBytes*
-    tempBuffer : UInt8*
-    externalData : DpiData*
-    data : DpiOracleData
-  end
-
   struct DpiError
     buffer : DpiErrorBuffer*
     handle : Void*
@@ -606,17 +573,6 @@ lib ODPI
   fun dpi_context_get_error = dpiContext_getError(context : DpiContext*,
                                                   errorInfo : DpiErrorInfo*) : Void
 
-  fun dpi_conn_new_var = dpiConn_newVar(conn : DpiConn*,
-                                        oracleTypeNum : DpiOracleTypeNum,
-                                        nativeTypeNum : DpiNativeTypeNum,
-                                        maxArraySize : UInt32,
-                                        size : UInt32,
-                                        sizeIsBytes : Int32,
-                                        isArray : Int32,
-                                        objType : DpiObjectType*,
-                                        var : DpiVar**,
-                                        data : DpiData**) : Int32
-
   fun dpi_conn_prepare_stmt = dpiConn_prepareStmt(conn : DpiConn*,
                                                   scrollable : Int32,
                                                   sql : UInt8*,
@@ -625,14 +581,16 @@ lib ODPI
                                                   tagLength : UInt32,
                                                   stmt : DpiStmt**) : Int32
 
-  fun dpi_stmt_bind_by_name = dpiStmt_bindByName(stmt : DpiStmt*,
-                                                 name : UInt8*,
-                                                 nameLength : UInt32,
-                                                 var : DpiVar*) : Int32
+  fun dpi_stmt_bind_value_by_name = dpiStmt_bindValueByName(stmt : DpiStmt*,
+                                                            name : UInt8*,
+                                                            nameLength : UInt32,
+                                                            nativeTypeNum : DpiNativeTypeNum,
+                                                            data : DpiData*)
 
-  fun dpi_stmt_bind_by_pos = dpiStmt_bindByPos(stmt : DpiStmt*,
-                                               pos : UInt32,
-                                               var : DpiVar*) : Int32
+  fun dpi_stmt_bind_value_by_pos = dpiStmt_bindValueByPos(stmt : DpiStmt*,
+                                                          pos : UInt32,
+                                                          nativeTypeNum : DpiNativeTypeNum,
+                                                          data : DpiData*) : Int32
 
   fun dpi_stmt_execute = dpiStmt_execute(stmt : DpiStmt*,
                                          mode : DpiExecMode,

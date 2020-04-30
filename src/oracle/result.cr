@@ -29,7 +29,6 @@ module Oracle
     @num_cols : UInt32
     @raw_context : ODPI::DpiContext*
     @raw_stmt : ODPI::DpiStmt*
-    @rows_affected : UInt64
 
     def initialize(statement : Statement, @num_cols)
       super(statement)
@@ -41,13 +40,6 @@ module Oracle
       @raw_context = statement.connection.raw_context
       @raw_stmt = statement.raw_stmt
       @error_info = ODPI::DpiErrorInfo.new
-
-      res = ODPI.dpi_stmt_get_row_count(@raw_stmt, out @rows_affected)
-      if res != ODPI::DPI_SUCCESS
-        ODPI.dpi_context_get_error(@raw_context, pointerof(@error_info))
-        error_msg = String.new(@error_info.message)
-        raise "Error fetching number of rows affected: #{error_msg}"
-      end
 
       query_info = ODPI::DpiQueryInfo.new
       (1..@num_cols).each do |i|
@@ -75,6 +67,17 @@ module Oracle
 
       name = @col_names[@col_index - 1]
       Field.new(name, @data_buffer, typenum)
+    end
+
+    def rows_affected : Int32
+      res = ODPI.dpi_stmt_get_row_count(@raw_stmt, out rows_affected)
+      if res != ODPI::DPI_SUCCESS
+        ODPI.dpi_context_get_error(@raw_context, pointerof(@error_info))
+        error_msg = String.new(@error_info.message)
+        raise "Error fetching number of rows affected: #{error_msg}"
+      end
+
+      rows_affected
     end
 
     def column_count : Int32
