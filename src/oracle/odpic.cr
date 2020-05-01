@@ -246,77 +246,77 @@ lib ODPI
   end
 
   enum DpiErrorNum
-    DPI_ERR_NO_ERR = 1000
-    DPI_ERR_NO_MEMORY
-    DPI_ERR_INVALID_HANDLE
-    DPI_ERR_ERR_NOT_INITIALIZED
-    DPI_ERR_GET_FAILED
-    DPI_ERR_CREATE_ENV
-    DPI_ERR_CONVERT_TEXT
-    DPI_ERR_QUERY_NOT_EXECUTED
-    DPI_ERR_UNHANDLED_DATA_TYPE
-    DPI_ERR_INVALID_ARRAY_POSITION
-    DPI_ERR_NOT_CONNECTED
-    DPI_ERR_CONN_NOT_IN_POOL
-    DPI_ERR_INVALID_PROXY
-    DPI_ERR_NOT_SUPPORTED
-    DPI_ERR_UNHANDLED_CONVERSION
-    DPI_ERR_ARRAY_SIZE_TOO_BIG
-    DPI_ERR_INVALID_DATE
-    DPI_ERR_VALUE_IS_NULL
-    DPI_ERR_ARRAY_SIZE_TOO_SMALL
-    DPI_ERR_BUFFER_SIZE_TOO_SMALL
-    DPI_ERR_VERSION_NOT_SUPPORTED
-    DPI_ERR_INVALID_ORACLE_TYPE
-    DPI_ERR_WRONG_ATTR
-    DPI_ERR_NOT_COLLECTION
-    DPI_ERR_INVALID_INDEX
-    DPI_ERR_NO_OBJECT_TYPE
-    DPI_ERR_INVALID_CHARSET
-    DPI_ERR_SCROLL_OUT_OF_RS
-    DPI_ERR_QUERY_POSITION_INVALID
-    DPI_ERR_NO_ROW_FETCHED
-    DPI_ERR_TLS_ERROR
-    DPI_ERR_ARRAY_SIZE_ZERO
-    DPI_ERR_EXT_AUTH_WITH_CREDENTIALS
-    DPI_ERR_CANNOT_GET_ROW_OFFSET
-    DPI_ERR_CONN_IS_EXTERNAL
-    DPI_ERR_TRANS_ID_TOO_LARGE
-    DPI_ERR_BRANCH_ID_TOO_LARGE
-    DPI_ERR_COLUMN_FETCH
-    DPI_ERR_STMT_CLOSED
-    DPI_ERR_LOB_CLOSED
-    DPI_ERR_INVALID_CHARSET_ID
-    DPI_ERR_INVALID_OCI_NUMBER
-    DPI_ERR_INVALID_NUMBER
-    DPI_ERR_NUMBER_NO_REPR
-    DPI_ERR_NUMBER_STRING_TOO_LONG
-    DPI_ERR_NULL_POINTER_PARAMETER
-    DPI_ERR_LOAD_LIBRARY
-    DPI_ERR_LOAD_SYMBOL
-    DPI_ERR_ORACLE_CLIENT_TOO_OLD
-    DPI_ERR_NLS_ENV_VAR_GET
-    DPI_ERR_PTR_LENGTH_MISMATCH
-    DPI_ERR_NAN
-    DPI_ERR_WRONG_TYPE
-    DPI_ERR_BUFFER_SIZE_TOO_LARGE
-    DPI_ERR_NO_EDITION_WITH_CONN_CLASS
-    DPI_ERR_NO_BIND_VARS_IN_DDL
-    DPI_ERR_SUBSCR_CLOSED
-    DPI_ERR_NO_EDITION_WITH_NEW_PASSWORD
-    DPI_ERR_UNEXPECTED_OCI_RETURN_VALUE
-    DPI_ERR_EXEC_MODE_ONLY_FOR_DML
-    DPI_ERR_ARRAY_VAR_NOT_SUPPORTED
-    DPI_ERR_EVENTS_MODE_REQUIRED
-    DPI_ERR_ORACLE_DB_TOO_OLD
-    DPI_ERR_CALL_TIMEOUT
-    DPI_ERR_SODA_CURSOR_CLOSED
-    DPI_ERR_EXT_AUTH_INVALID_PROXY
-    DPI_ERR_QUEUE_NO_PAYLOAD
-    DPI_ERR_QUEUE_WRONG_PAYLOAD_TYPE
-    DPI_ERR_ORACLE_CLIENT_UNSUPPORTED
-    DPI_ERR_MISSING_SHARDING_KEY
-    DPI_ERR_MAX
+    NoErr = 1000
+    NoEemory
+    InvalidHandle
+    ErrNotInitialized
+    GetFailed
+    CreateEnv
+    ConvertText
+    QueryNotExecuted
+    UnhandledDataType
+    InvalidArrayPosition
+    NotConnected
+    ConnNotInPool
+    InvalidProxy
+    NotSupported
+    UnhandledConversion
+    ArraySizeTooBig
+    InvalidDate
+    ValueIsNull
+    ArraySizeTooSmall
+    BufferSizeTooSmall
+    VersionNotSupported
+    InvalidOracleType
+    WrongAttr
+    NotCollection
+    InvalidIndex
+    NoObjectType
+    InvalidCharset
+    ScrollOutOfRs
+    QueryPositionInvalid
+    NoRowFetched
+    TlsError
+    ArraySizeZero
+    ExtAuthWithCredentials
+    CannotGetRowOffset
+    ConnIsExternal
+    TransIdTooLarge
+    BranchIdTooLarge
+    ColumnFetch
+    StmtClosed
+    LobClosed
+    InvalidCharsetId
+    InvalidOciNumber
+    InvalidNumber
+    NumberNoRepr
+    NumberStringTooLong
+    NullPointerParameter
+    LoadLibrary
+    LoadSymbol
+    OracleClientTooOld
+    NlsEnvVarGet
+    PtrLengthMismatch
+    Nan
+    WrongType
+    BufferSizeTooLarge
+    NoEditionWithConnClass
+    No_BindVarsInDdl
+    SubscrClosed
+    NoEditionWithNewPassword
+    UnexpectedOciReturnValue
+    ExecModeOnlyForDml
+    ArrayVarNotSupported
+    EventsModeRequired
+    OracleDbTooOld
+    CallTimeout
+    SodaCursorClosed
+    ExtAuthInvalidProxy
+    QueueNoPayload
+    QueueWrongPayloadType
+    OracleClientUnsupported
+    MissingShardingKey
+    Max
   end
 
   union DpiDataBuffer
@@ -522,18 +522,6 @@ lib ODPI
     messageLength : UInt32
     isRecoverable : Int32
     isWarning : Int32
-  end
-
-  struct DpiDynamicBytesChunk
-    ptr : UInt8*
-    length : UInt32
-    allocatedLength : UInt32
-  end
-
-  struct DpiDynamicBytes
-    numChunks : UInt32
-    allocatedChunks : UInt32
-    chunks : DpiDynamicBytesChunk*
   end
 
   struct DpiOciDate
